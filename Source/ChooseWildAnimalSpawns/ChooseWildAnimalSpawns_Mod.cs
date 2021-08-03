@@ -410,7 +410,7 @@ namespace ChooseWildAnimalSpawns.Settings
                             sliderRect,
                             currentBiomeAnimalRecords[animal], 0,
                             3f, false, currentBiomeAnimalRecords[animal].ToString(), animalTitle,
-                            modInfo, 0.001f), 3);
+                            modInfo, 0.0001f), 4);
                         GUI.color = Color.white;
                         DrawIcon(animal,
                             new Rect(rowRect.position, iconSize));

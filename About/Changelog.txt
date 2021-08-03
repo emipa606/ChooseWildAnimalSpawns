@@ -1,4 +1,7 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.0.1.0 - Increased the amount of didgits to 4 to support smaller values
+
+
 1.0.0.0 - First publish
 
