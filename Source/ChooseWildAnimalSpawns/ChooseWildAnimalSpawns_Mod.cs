@@ -37,6 +37,7 @@ namespace ChooseWildAnimalSpawns.Settings
         private static Vector2 scrollPosition;
 
         private static Dictionary<PawnKindDef, float> currentBiomeAnimalRecords;
+        private static Dictionary<PawnKindDef, int> currentBiomeAnimalDecimals;
 
         private static string selectedDef = "Settings";
 
@@ -97,6 +98,7 @@ namespace ChooseWildAnimalSpawns.Settings
                 }
 
                 currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+                currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
                 selectedDef = value;
 
                 if (value == null || value == "Settings")
@@ -108,6 +110,16 @@ namespace ChooseWildAnimalSpawns.Settings
                 foreach (var animal in Main.AllAnimals)
                 {
                     currentBiomeAnimalRecords[animal] = selectedBiome.CommonalityOfAnimal(animal);
+                    var decimals =
+                        (currentBiomeAnimalRecords[animal] - Math.Truncate(currentBiomeAnimalRecords[animal]))
+                        .ToString().Length;
+
+                    if (decimals < 4)
+                    {
+                        decimals = 4;
+                    }
+
+                    currentBiomeAnimalDecimals[animal] = decimals;
                 }
             }
         }
@@ -125,6 +137,7 @@ namespace ChooseWildAnimalSpawns.Settings
             if (currentBiomeAnimalRecords == null)
             {
                 currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+                currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
                 Main.LogMessage($"currentBiomeAnimalRecords null for {SelectedDef}");
                 return;
             }
@@ -139,6 +152,7 @@ namespace ChooseWildAnimalSpawns.Settings
             {
                 Main.LogMessage($"VanillaSpawnRates not contain {SelectedDef}");
                 currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+                currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
                 return;
             }
 
@@ -171,12 +185,14 @@ namespace ChooseWildAnimalSpawns.Settings
                 }
 
                 currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+                currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
                 Main.LogMessage($"currentBiomeList for {SelectedDef} empty");
                 return;
             }
 
             instance.Settings.CustomSpawnRates[SelectedDef] = new SaveableDictionary(currentBiomeList);
             currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+            currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
         }
 
         /// <summary>
@@ -341,6 +357,17 @@ namespace ChooseWildAnimalSpawns.Settings
                                         {
                                             currentBiomeAnimalRecords[animal] =
                                                 selectedBiome.CommonalityOfAnimal(animal);
+                                            var decimals =
+                                                (currentBiomeAnimalRecords[animal] -
+                                                 Math.Truncate(currentBiomeAnimalRecords[animal]))
+                                                .ToString().Length;
+
+                                            if (decimals < 4)
+                                            {
+                                                decimals = 4;
+                                            }
+
+                                            currentBiomeAnimalDecimals[animal] = decimals;
                                         }
                                     }));
                             }, "CWAS.reset.button".Translate(),
@@ -365,7 +392,9 @@ namespace ChooseWildAnimalSpawns.Settings
                     var animals = Main.AllAnimals;
                     if (!string.IsNullOrEmpty(searchText))
                     {
-                        animals = Main.AllAnimals.Where(def => def.label.ToLower().Contains(searchText.ToLower()))
+                        animals = Main.AllAnimals.Where(def =>
+                                def.label.ToLower().Contains(searchText.ToLower()) || def.modContentPack.Name.ToLower()
+                                    .Contains(searchText.ToLower()))
                             .ToList();
                     }
 
@@ -373,14 +402,14 @@ namespace ChooseWildAnimalSpawns.Settings
                     borderRect.y += headerLabel.y + 40;
                     borderRect.height -= headerLabel.y + 40;
                     var scrollContentRect = frameRect;
-                    scrollContentRect.height = animals.Count * 51f / 2;
+                    scrollContentRect.height = animals.Count * 51f;
                     scrollContentRect.width -= 20;
                     scrollContentRect.x = 0;
                     scrollContentRect.y = 0;
 
                     var scrollListing = new Listing_Standard();
                     BeginScrollView(ref scrollListing, borderRect, ref scrollPosition, ref scrollContentRect);
-                    scrollListing.ColumnWidth = (contentRect.width - 40) / 2;
+                    scrollListing.ColumnWidth = contentRect.width - 40;
                     foreach (var animal in animals)
                     {
                         var modInfo = animal.modContentPack?.Name;
@@ -388,14 +417,14 @@ namespace ChooseWildAnimalSpawns.Settings
                         var sliderRect = new Rect(rowRect.position + new Vector2(iconSize.x, 0),
                             rowRect.size - new Vector2(iconSize.x, 0));
                         var animalTitle = animal.label.CapitalizeFirst();
-                        if (animalTitle.Length > 15)
+                        if (animalTitle.Length > 30)
                         {
-                            animalTitle = $"{animalTitle.Substring(0, 13)}...";
+                            animalTitle = $"{animalTitle.Substring(0, 27)}...";
                         }
 
-                        if (modInfo is {Length: > 15})
+                        if (modInfo is {Length: > 30})
                         {
-                            modInfo = $"{modInfo.Substring(0, 13)}...";
+                            modInfo = $"{modInfo.Substring(0, 27)}...";
                         }
 
                         if (instance.Settings.CustomSpawnRates != null &&
@@ -406,21 +435,18 @@ namespace ChooseWildAnimalSpawns.Settings
                             GUI.color = Color.green;
                         }
 
-                        currentBiomeAnimalRecords[animal] = (float) Math.Round((decimal) Widgets.HorizontalSlider(
-                            sliderRect,
-                            currentBiomeAnimalRecords[animal], 0,
-                            3f, false, currentBiomeAnimalRecords[animal].ToString(), animalTitle,
-                            modInfo, 0.0001f), 4);
+                        currentBiomeAnimalRecords[animal] =
+                            (float) Math.Round((decimal) Widgets.HorizontalSlider(
+                                sliderRect,
+                                currentBiomeAnimalRecords[animal], 0,
+                                3f, false,
+                                currentBiomeAnimalRecords[animal].ToString($"N{currentBiomeAnimalDecimals[animal]}")
+                                    .TrimEnd('0').TrimEnd('.'),
+                                animalTitle,
+                                modInfo), currentBiomeAnimalDecimals[animal]);
                         GUI.color = Color.white;
                         DrawIcon(animal,
                             new Rect(rowRect.position, iconSize));
-
-                        if (counter == Math.Ceiling(animals.Count / (decimal) 2))
-                        {
-                            scrollListing.NewColumn();
-                        }
-
-                        counter++;
                     }
 
                     EndScrollView(ref scrollListing, ref borderRect, frameRect.width, listing_Standard.CurHeight);

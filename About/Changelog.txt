@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.0.2.0 - Supports very low values, fixed the clicking issue, wider sliders for better control
+
+
 1.0.1.0 - Increased the amount of didgits to 4 to support smaller values
 
 
