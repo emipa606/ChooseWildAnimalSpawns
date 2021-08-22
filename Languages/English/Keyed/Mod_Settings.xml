@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CWAS.settings>Settings</CWAS.settings>
+  <CWAS.commonality.label>Biome animal overall density</CWAS.commonality.label>
+  <CWAS.resetall.label>Manual config reset</CWAS.resetall.label>
+  <CWAS.resetall.tooltip>Reset all modified spawn-rates</CWAS.resetall.tooltip>
+  <CWAS.resetall.button>Reset all</CWAS.resetall.button>
+  <CWAS.resetall.confirm>This will reset ALL spawn-values to vanilla values for all biomes</CWAS.resetall.confirm>
+  <CWAS.resetone.confirm>This will reset the spawn values for {0} to vanilla values</CWAS.resetone.confirm>
+  <CWAS.logging.label>Enable verbose logging</CWAS.logging.label>
+  <CWAS.logging.tooltip>Shows verbose logging, for finding errors</CWAS.logging.tooltip>
+  <CWAS.version.label>Installed mod-version: {0}</CWAS.version.label>
+  <CWAS.reset.button>Reset</CWAS.reset.button>
+  <CWAS.undo.button>Undo</CWAS.undo.button>
+  <CWAS.save.button>Save</CWAS.save.button>
+  <CWAS.search>Search animal</CWAS.search>
+  <CWAS.customexists>Has custom spawn-rates defined</CWAS.customexists>
+</LanguageData>

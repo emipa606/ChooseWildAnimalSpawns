@@ -1,0 +1,13 @@
+# Changelog for ChooseWildAnimalSpawns
+
+1.0.3.0 - Added setting for overall density per biome
+
+
+1.0.2.0 - Supports very low values, fixed the clicking issue, wider sliders for better control
+
+
+1.0.1.0 - Increased the amount of didgits to 4 to support smaller values
+
+
+1.0.0.0 - First publish
+
