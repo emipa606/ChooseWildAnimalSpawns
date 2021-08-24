@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using Mlie;
 using RimWorld;
 using UnityEngine;
@@ -44,6 +45,8 @@ namespace ChooseWildAnimalSpawns.Settings
         private static string selectedDef = "Settings";
 
         private static string searchText = "";
+
+        private static bool aaWarningShown;
 
 
         /// <summary>
@@ -116,9 +119,22 @@ namespace ChooseWildAnimalSpawns.Settings
 
                 var selectedBiome = BiomeDef.Named(selectedDef);
                 currentBiomeAnimalDensity = selectedBiome.animalDensity;
+                var cachedCommonailtiesTraverse = Traverse.Create(selectedBiome).Field("cachedAnimalCommonalities");
+                if (cachedCommonailtiesTraverse.GetValue() == null)
+                {
+                    var unused = selectedBiome.CommonalityOfAnimal(Main.AllAnimals.First());
+                }
+
+                var cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();
+
                 foreach (var animal in Main.AllAnimals)
                 {
-                    currentBiomeAnimalRecords[animal] = selectedBiome.CommonalityOfAnimal(animal);
+                    if (!cachedAnimalCommonalities.TryGetValue(animal, out var commonality))
+                    {
+                        commonality = 0f;
+                    }
+
+                    currentBiomeAnimalRecords[animal] = commonality;
                     var decimals =
                         (currentBiomeAnimalRecords[animal] - Math.Truncate(currentBiomeAnimalRecords[animal]))
                         .ToString().Length;
@@ -237,6 +253,15 @@ namespace ChooseWildAnimalSpawns.Settings
             DrawOptions(rect2);
             DrawTabsList(rect2);
             Settings.Write();
+            if (aaWarningShown || ModLister.GetActiveModWithIdentifier("sarg.alphaanimals") == null)
+            {
+                return;
+            }
+
+            Find.WindowStack.Add(new Dialog_MessageBox(
+                "CWAS.aaWarning".Translate(),
+                "CWAS.ok.button".Translate()));
+            aaWarningShown = true;
         }
 
         /// <summary>
@@ -382,10 +407,25 @@ namespace ChooseWildAnimalSpawns.Settings
                                         instance.Settings.ResetOneValue(SelectedDef);
                                         currentBiomeAnimalDensity = Main.VanillaDensities[SelectedDef];
                                         var selectedBiome = BiomeDef.Named(SelectedDef);
+                                        var cachedCommonailtiesTraverse = Traverse.Create(selectedBiome)
+                                            .Field("cachedAnimalCommonalities");
+                                        if (cachedCommonailtiesTraverse.GetValue() == null)
+                                        {
+                                            var unused =
+                                                selectedBiome.CommonalityOfAnimal(Main.AllAnimals.First());
+                                        }
+
+                                        var cachedAnimalCommonalities =
+                                            (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();
+
                                         foreach (var animal in Main.AllAnimals)
                                         {
-                                            currentBiomeAnimalRecords[animal] =
-                                                selectedBiome.CommonalityOfAnimal(animal);
+                                            if (!cachedAnimalCommonalities.TryGetValue(animal, out var commonality))
+                                            {
+                                                commonality = 0f;
+                                            }
+
+                                            currentBiomeAnimalRecords[animal] = commonality;
                                             var decimals =
                                                 (currentBiomeAnimalRecords[animal] -
                                                  Math.Truncate(currentBiomeAnimalRecords[animal]))

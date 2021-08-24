@@ -13,6 +13,12 @@
   <CWAS.reset.button>Reset</CWAS.reset.button>
   <CWAS.undo.button>Undo</CWAS.undo.button>
   <CWAS.save.button>Save</CWAS.save.button>
+  <CWAS.ok.button>OK</CWAS.ok.button>
   <CWAS.search>Search animal</CWAS.search>
   <CWAS.customexists>Has custom spawn-rates defined</CWAS.customexists>
+  <CWAS.aaWarning>Alpha Animals is also active. That mod has settings for defining the spawn-rate of the animals in it but it works by adding a multiplier to the value instead of changing it. 
+
+The values you will see in this mods settings are the actual spawn-values. Any changes done in Alpa Animals will still be applied in game, they will just not be shown in the settings of this mod. 
+
+To keep it simple I suggest you just use this mods settings for modifying the spawn rate and leave the multiplier in Alpha Animals at 1x.</CWAS.aaWarning>
 </LanguageData>

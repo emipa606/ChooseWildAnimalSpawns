@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-	<HugsLib.UpdateFeatureDef Abstract="true" Name="UpdateFeatureBase">
-		<modNameReadable>ChooseWildAnimalSpawns</modNameReadable>
-		<linkUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2564042934</linkUrl>
-	</HugsLib.UpdateFeatureDef>
-	<HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
-		<defName>ChooseWildAnimalSpawns_1_0_3_0</defName>
-		<assemblyVersion>1.0.3.0</assemblyVersion>
-		<content>Added a setting for modifying the overall animal density for each biome
+  <HugsLib.UpdateFeatureDef Abstract="true" Name="UpdateFeatureBase">
+    <modNameReadable>ChooseWildAnimalSpawns</modNameReadable>
+    <linkUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2564042934</linkUrl>
+  </HugsLib.UpdateFeatureDef>
+  <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+    <defName>ChooseWildAnimalSpawns_1_0_3_0</defName>
+    <assemblyVersion>1.0.3.0</assemblyVersion>
+    <content>Added a setting for modifying the overall animal density for each biome
 </content>
-	</HugsLib.UpdateFeatureDef>
+  </HugsLib.UpdateFeatureDef>
 </Defs>
-

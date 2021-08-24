@@ -7,6 +7,8 @@ This mod is a successor to claustros mod https://steamcommunity.com/sharedfiles/
 The major difference is that this version allows you to define the spawn-rate per animal per biome instead of the on/off selection. 
 The other difference it that you can modify any animal, vanilla and modded.
 
+Added a slider for the overall animal density per biome as well.
+
 If you need higher accuracy than what the sliders provide, try adding the  https://steamcommunity.com/sharedfiles/filedetails/?id=2218078784]BetterSliders mod
 
 [table]

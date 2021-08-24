@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.0.4.0 - Should now work better with Alpha Animals, and other mods that modify the animalcommonality-function
+
+
 1.0.3.0 - Added setting for overall density per biome
 
 

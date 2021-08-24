@@ -130,10 +130,22 @@ namespace ChooseWildAnimalSpawns
                 }
 
                 var currentBiomeRecord = new List<BiomeAnimalRecord>();
+                var cachedCommonailtiesTraverse = Traverse.Create(biome).Field("cachedAnimalCommonalities");
+                if (cachedCommonailtiesTraverse.GetValue() == null)
+                {
+                    var unused = biome.CommonalityOfAnimal(AllAnimals.First());
+                }
+
+                var cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();
                 foreach (var animal in biome.AllWildAnimals)
                 {
+                    if (!cachedAnimalCommonalities.TryGetValue(animal, out var commonality))
+                    {
+                        commonality = 0f;
+                    }
+
                     currentBiomeRecord.Add(new BiomeAnimalRecord
-                        { animal = animal, commonality = biome.CommonalityOfAnimal(animal) });
+                        { animal = animal, commonality = commonality });
                 }
 
                 VanillaSpawnRates[biome.defName] = currentBiomeRecord;
