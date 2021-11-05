@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.0.5.0 - Fixed the biome-list height as a longer list was cut short.
+
+
 1.0.4.0 - Should now work better with Alpha Animals, and other mods that modify the animalcommonality-function
 
 

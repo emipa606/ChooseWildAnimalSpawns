@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <name>Choose Wild Animal Spawns</name>
   <packageId>Mlie.ChooseWildAnimalSpawns</packageId>
@@ -18,7 +18,7 @@
   <loadAfter>
     <li>brrainz.harmony</li>
   </loadAfter>
-  <description>[img]https://i.imgur.com/WAEzk68.png[/img]
+  <description>[img]https://i.imgur.com/buuPQel.png[/img]
 This mod is a successor to claustros mod [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2067667371]Disable Wild Animal Spawns[/url]
 
 The major difference is that this version allows you to define the spawn-rate per animal per biome instead of the on/off selection. 
@@ -36,12 +36,12 @@ If you need higher accuracy than what the sliders provide, try adding the [url= 
 [/table]
 	
 
-[img]https://i.imgur.com/pgjQLXV.png[/img]
+[img]https://i.imgur.com/O0IIlYj.png[/img]
 Since modding is just a hobby for me I expect no donations to keep modding. If you still want to show your support you can gift me anything from my [url=https://store.steampowered.com/wishlist/id/Mlie]Wishlist[/url] or buy me a cup of tea.
 
 [url=https://ko-fi.com/G2G55DDYD][img]https://i.ibb.co/VWJJb3w/Support-Me-dark-2x.png[/img][/url]
 
-[img]https://i.imgur.com/Rs6T6cr.png[/img]
+[img]https://i.imgur.com/PwoNOj4.png[/img]
 [list]
 [*] See if the the error persists if you just have this mod and its requirements active.
 [*] If not, try adding your other mods until it happens again.
