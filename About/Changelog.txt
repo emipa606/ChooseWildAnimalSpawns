@@ -1,6 +1,15 @@
 # Changelog for ChooseWildAnimalSpawns
 
-1.0.3.0 - Fixed the scrollview, thanks Taranchuk for the simple solution!
+1.0.6.0 - Fixed the scrollview, thanks Taranchuk for the simple solution!
+
+
+1.0.5.0 - Fixed the biome-list height as a longer list was cut short.
+
+
+1.0.4.0 - Should now work better with Alpha Animals, and other mods that modify the animalcommonality-function
+
+
+1.0.3.0 - Added setting for overall density per biome
 
 
 1.0.2.0 - Supports very low values, fixed the clicking issue, wider sliders for better control
