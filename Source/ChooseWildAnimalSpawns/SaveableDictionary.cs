@@ -1,45 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChooseWildAnimalSpawns
+namespace ChooseWildAnimalSpawns;
+
+public class SaveableDictionary
 {
-    public class SaveableDictionary
+    public SaveableDictionary()
     {
-        public SaveableDictionary()
+        dictionary = new Dictionary<string, float>();
+    }
+
+    public SaveableDictionary(Dictionary<string, float> dictionary)
+    {
+        this.dictionary = dictionary;
+    }
+
+    public Dictionary<string, float> dictionary { get; }
+
+    public override string ToString()
+    {
+        var returnvalue = string.Empty;
+
+        foreach (var keyValuePair in dictionary)
         {
-            dictionary = new Dictionary<string, float>();
+            returnvalue += $"#{keyValuePair.Key}:{keyValuePair.Value}";
         }
 
-        public SaveableDictionary(Dictionary<string, float> dictionary)
+        return returnvalue;
+    }
+
+    public static SaveableDictionary FromString(string Str)
+    {
+        Str = Str.TrimStart('#');
+        var array = Str.Split('#');
+        var returnValue = new Dictionary<string, float>();
+        foreach (var s in array)
         {
-            this.dictionary = dictionary;
+            returnValue[s.Split(':')[0]] = Convert.ToSingle(s.Split(':')[1]);
         }
 
-        public Dictionary<string, float> dictionary { get; }
-
-        public override string ToString()
-        {
-            var returnvalue = string.Empty;
-
-            foreach (var keyValuePair in dictionary)
-            {
-                returnvalue += $"#{keyValuePair.Key}:{keyValuePair.Value}";
-            }
-
-            return returnvalue;
-        }
-
-        public static SaveableDictionary FromString(string Str)
-        {
-            Str = Str.TrimStart('#');
-            var array = Str.Split('#');
-            var returnValue = new Dictionary<string, float>();
-            foreach (var s in array)
-            {
-                returnValue[s.Split(':')[0]] = Convert.ToSingle(s.Split(':')[1]);
-            }
-
-            return new SaveableDictionary(returnValue);
-        }
+        return new SaveableDictionary(returnValue);
     }
 }

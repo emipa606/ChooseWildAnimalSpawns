@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.0.3.0 - Fixed the scrollview, thanks Taranchuk for the simple solution!
+
+
 1.0.2.0 - Supports very low values, fixed the clicking issue, wider sliders for better control
 
 
