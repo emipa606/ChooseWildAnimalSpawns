@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.0.7.0 - Updated VersionFromManifest-file to not get the 'loading is already in progress' error with some mods
+
+
 1.0.6.0 - Fixed the scrollview, thanks Taranchuk for the simple solution!
 
 
