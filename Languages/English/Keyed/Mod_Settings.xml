@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <CWAS.settings>Settings</CWAS.settings>
+  <CWAS.density.label>Overall animal density</CWAS.density.label>
   <CWAS.resetall.label>Manual config reset</CWAS.resetall.label>
   <CWAS.resetall.tooltip>Reset all modified spawn-rates</CWAS.resetall.tooltip>
   <CWAS.resetall.button>Reset all</CWAS.resetall.button>
@@ -12,6 +13,7 @@
   <CWAS.reset.button>Reset</CWAS.reset.button>
   <CWAS.undo.button>Undo</CWAS.undo.button>
   <CWAS.save.button>Save</CWAS.save.button>
+  <CWAS.copy.button>Copy from...</CWAS.copy.button>
   <CWAS.search>Search animal</CWAS.search>
   <CWAS.customexists>Has custom spawn-rates defined</CWAS.customexists>
 </LanguageData>

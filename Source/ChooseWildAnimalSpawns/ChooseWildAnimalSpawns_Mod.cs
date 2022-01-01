@@ -159,82 +159,89 @@ public class ChooseWildAnimalSpawns_Mod : Mod
 
     private static void saveBiomeSettings()
     {
-        if (SelectedDef == "Settings")
+        try
         {
-            return;
-        }
-
-        if (currentBiomeAnimalDensity == Main.VanillaDensities[SelectedDef])
-        {
-            if (instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
+            if (SelectedDef == "Settings")
             {
-                instance.Settings.CustomDensities.Remove(SelectedDef);
+                return;
             }
-        }
-        else
-        {
-            instance.Settings.CustomDensities[SelectedDef] = currentBiomeAnimalDensity;
-        }
 
-        if (currentBiomeAnimalRecords == null)
-        {
+            if (currentBiomeAnimalDensity == Main.VanillaDensities[SelectedDef])
+            {
+                if (instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
+                {
+                    instance.Settings.CustomDensities.Remove(SelectedDef);
+                }
+            }
+            else
+            {
+                instance.Settings.CustomDensities[SelectedDef] = currentBiomeAnimalDensity;
+            }
+
+            if (currentBiomeAnimalRecords == null)
+            {
+                currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+                currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
+                Main.LogMessage($"currentBiomeAnimalRecords null for {SelectedDef}");
+                return;
+            }
+
+            if (!currentBiomeAnimalRecords.Any())
+            {
+                Main.LogMessage($"currentBiomeAnimalRecords for {SelectedDef} empty");
+                return;
+            }
+
+            if (!Main.VanillaSpawnRates.ContainsKey(SelectedDef))
+            {
+                Main.LogMessage($"VanillaSpawnRates not contain {SelectedDef}");
+                currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+                currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
+                return;
+            }
+
+            var currentBiomeList = new Dictionary<string, float>();
+            foreach (var animal in Main.AllAnimals)
+            {
+                var vanillaValue = Main.VanillaSpawnRates[SelectedDef]
+                    .FirstOrFallback(record => record.animal == animal);
+                if (vanillaValue != null && vanillaValue.commonality.ToString() ==
+                    currentBiomeAnimalRecords[animal].ToString())
+                {
+                    continue;
+                }
+
+                if (vanillaValue == null && currentBiomeAnimalRecords[animal] == 0)
+                {
+                    continue;
+                }
+
+                Main.LogMessage(
+                    $"{animal.label}: chosen value {currentBiomeAnimalRecords[animal]}, vanilla value {vanillaValue?.commonality}");
+                currentBiomeList.Add(animal.defName, currentBiomeAnimalRecords[animal]);
+            }
+
+            if (!currentBiomeList.Any())
+            {
+                if (instance.Settings.CustomSpawnRates.ContainsKey(SelectedDef))
+                {
+                    instance.Settings.CustomSpawnRates.Remove(SelectedDef);
+                }
+
+                currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
+                currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
+                Main.LogMessage($"currentBiomeList for {SelectedDef} empty");
+                return;
+            }
+
+            instance.Settings.CustomSpawnRates[SelectedDef] = new SaveableDictionary(currentBiomeList);
             currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
             currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
-            Main.LogMessage($"currentBiomeAnimalRecords null for {SelectedDef}");
-            return;
         }
-
-        if (!currentBiomeAnimalRecords.Any())
+        catch (Exception exception)
         {
-            Main.LogMessage($"currentBiomeAnimalRecords for {SelectedDef} empty");
-            return;
+            Main.LogMessage($"Failed to save settings, {exception}", true, true);
         }
-
-        if (!Main.VanillaSpawnRates.ContainsKey(SelectedDef))
-        {
-            Main.LogMessage($"VanillaSpawnRates not contain {SelectedDef}");
-            currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
-            currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
-            return;
-        }
-
-        var currentBiomeList = new Dictionary<string, float>();
-        foreach (var animal in Main.AllAnimals)
-        {
-            var vanillaValue = Main.VanillaSpawnRates[SelectedDef]
-                .FirstOrFallback(record => record.animal == animal);
-            if (vanillaValue != null && vanillaValue.commonality.ToString() ==
-                currentBiomeAnimalRecords[animal].ToString())
-            {
-                continue;
-            }
-
-            if (vanillaValue == null && currentBiomeAnimalRecords[animal] == 0)
-            {
-                continue;
-            }
-
-            Main.LogMessage(
-                $"{animal.label}: chosen value {currentBiomeAnimalRecords[animal]}, vanilla value {vanillaValue?.commonality}");
-            currentBiomeList.Add(animal.defName, currentBiomeAnimalRecords[animal]);
-        }
-
-        if (!currentBiomeList.Any())
-        {
-            if (instance.Settings.CustomSpawnRates.ContainsKey(SelectedDef))
-            {
-                instance.Settings.CustomSpawnRates.Remove(SelectedDef);
-            }
-
-            currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
-            currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
-            Main.LogMessage($"currentBiomeList for {SelectedDef} empty");
-            return;
-        }
-
-        instance.Settings.CustomSpawnRates[SelectedDef] = new SaveableDictionary(currentBiomeList);
-        currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
-        currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
     }
 
     /// <summary>
@@ -439,18 +446,23 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                                     }
                                 }));
                         }, "CWAS.reset.button".Translate(),
-                        new Vector2(headerLabel.position.x + headerLabel.width - buttonSize.x,
+                        new Vector2(headerLabel.position.x + headerLabel.width - (buttonSize.x * 2),
                             headerLabel.position.y));
                 }
 
                 searchText =
                     Widgets.TextField(
-                        new Rect(headerLabel.position + new Vector2((frameRect.width / 2) - (searchSize.x / 2), 0),
+                        new Rect(
+                            headerLabel.position +
+                            new Vector2((frameRect.width / 2) - (searchSize.x / 2) - (buttonSize.x / 2), 0),
                             searchSize),
                         searchText);
                 TooltipHandler.TipRegion(new Rect(
                     headerLabel.position + new Vector2((frameRect.width / 2) - (searchSize.x / 2), 0),
                     searchSize), "CWAS.search".Translate());
+
+                DrawButton(delegate { CopySpawnValues(SelectedDef); }, "CWAS.copy.button".Translate(),
+                    headerLabel.position + new Vector2(frameRect.width - buttonSize.x, 0));
 
                 listing_Standard.End();
 
@@ -458,8 +470,8 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 if (!string.IsNullOrEmpty(searchText))
                 {
                     animals = Main.AllAnimals.Where(def =>
-                            def.label.ToLower().Contains(searchText.ToLower()) || def.modContentPack.Name.ToLower()
-                                .Contains(searchText.ToLower()))
+                            def.label.ToLower().Contains(searchText.ToLower()) || def.modContentPack?.Name.ToLower()
+                                .Contains(searchText.ToLower()) == true)
                         .ToList();
                 }
 
@@ -487,7 +499,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                         currentBiomeAnimalDensity, 0,
                         6f, false,
                         currentBiomeAnimalDensity.ToString(),
-                        "CWAS.commonality.label".Translate()), 3);
+                        "CWAS.density.label".Translate()), 3);
                 GUI.color = Color.white;
 
                 foreach (var animal in animals)
@@ -534,6 +546,65 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 break;
             }
         }
+    }
+
+    private static void CopySpawnValues(string originalDef)
+    {
+        var list = new List<FloatMenuOption>();
+
+        foreach (var biome in Main.AllBiomes.Where(biomeDef => biomeDef.defName != originalDef))
+        {
+            void action()
+            {
+                Main.LogMessage($"Copying overall animal density from {biome.defName} to {originalDef}");
+                currentBiomeAnimalDensity = Main.VanillaDensities[biome.defName];
+                if (instance.Settings.CustomDensities.ContainsKey(biome.defName))
+                {
+                    currentBiomeAnimalDensity = instance.Settings.CustomDensities[biome.defName];
+                }
+
+
+                Main.LogMessage($"Fetching current animal spawnrates for {biome.defName}");
+                var cachedCommonailtiesTraverse = Traverse.Create(biome)
+                    .Field("cachedAnimalCommonalities");
+                if (cachedCommonailtiesTraverse.GetValue() == null)
+                {
+                    var unused =
+                        biome.CommonalityOfAnimal(Main.AllAnimals.First());
+                }
+
+                var cachedAnimalCommonalities =
+                    (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();
+
+                foreach (var animal in Main.AllAnimals)
+                {
+                    Main.LogMessage($"Setting spawnrate for {animal.defName}");
+                    if (!cachedAnimalCommonalities.TryGetValue(animal, out var commonality))
+                    {
+                        commonality = 0f;
+                    }
+
+                    currentBiomeAnimalRecords[animal] = commonality;
+                    var decimals =
+                        (currentBiomeAnimalRecords[animal] -
+                         Math.Truncate(currentBiomeAnimalRecords[animal]))
+                        .ToString().Length;
+
+                    if (decimals < 4)
+                    {
+                        decimals = 4;
+                    }
+
+                    currentBiomeAnimalDecimals[animal] = decimals;
+                }
+
+                SelectedDef = originalDef;
+            }
+
+            list.Add(new FloatMenuOption(biome.LabelCap, action));
+        }
+
+        Find.WindowStack.Add(new FloatMenu(list));
     }
 
     private void DrawTabsList(Rect rect)
