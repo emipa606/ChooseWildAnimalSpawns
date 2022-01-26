@@ -8,6 +8,7 @@ The major difference is that this version allows you to define the spawn-rate pe
 The other difference it that you can modify any animal, vanilla and modded.
 
 Added a slider for the overall animal density per biome as well.
+Also option to copy values between biomes.
 
 If you need higher accuracy than what the sliders provide, try adding the  https://steamcommunity.com/sharedfiles/filedetails/?id=2218078784]BetterSliders mod
 	

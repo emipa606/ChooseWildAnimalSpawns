@@ -463,7 +463,20 @@ public class ChooseWildAnimalSpawns_Mod : Mod
 
                 DrawButton(delegate { CopySpawnValues(SelectedDef); }, "CWAS.copy.button".Translate(),
                     headerLabel.position + new Vector2(frameRect.width - buttonSize.x, 0));
+                if (instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
+                {
+                    GUI.color = Color.green;
+                }
 
+                listing_Standard.Gap();
+                currentBiomeAnimalDensity =
+                    (float)Math.Round((decimal)Widgets.HorizontalSlider(
+                        listing_Standard.GetRect(50),
+                        currentBiomeAnimalDensity, 0,
+                        6f, false,
+                        currentBiomeAnimalDensity.ToString(),
+                        "CWAS.density.label".Translate()), 3);
+                GUI.color = Color.white;
                 listing_Standard.End();
 
                 var animals = Main.AllAnimals;
@@ -476,8 +489,8 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 }
 
                 var borderRect = frameRect;
-                borderRect.y += headerLabel.y + 40;
-                borderRect.height -= headerLabel.y + 40;
+                borderRect.y += headerLabel.y + 90;
+                borderRect.height -= headerLabel.y + 90;
                 var scrollContentRect = frameRect;
                 scrollContentRect.height = animals.Count * 51f;
                 scrollContentRect.width -= 20;
@@ -487,20 +500,6 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 var scrollListing = new Listing_Standard();
                 Widgets.BeginScrollView(borderRect, ref scrollPosition, scrollContentRect);
                 scrollListing.Begin(scrollContentRect);
-                if (instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
-                {
-                    GUI.color = Color.green;
-                }
-
-                scrollListing.Gap();
-                currentBiomeAnimalDensity =
-                    (float)Math.Round((decimal)Widgets.HorizontalSlider(
-                        scrollListing.GetRect(50),
-                        currentBiomeAnimalDensity, 0,
-                        6f, false,
-                        currentBiomeAnimalDensity.ToString(),
-                        "CWAS.density.label".Translate()), 3);
-                GUI.color = Color.white;
 
                 foreach (var animal in animals)
                 {
