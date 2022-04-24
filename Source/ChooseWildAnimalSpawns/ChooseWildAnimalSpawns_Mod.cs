@@ -48,6 +48,8 @@ public class ChooseWildAnimalSpawns_Mod : Mod
 
     private static bool aaWarningShown;
 
+    private static readonly Color alternateBackground = new Color(0.1f, 0.1f, 0.1f, 0.5f);
+
 
     /// <summary>
     ///     The private settings
@@ -501,10 +503,17 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 Widgets.BeginScrollView(borderRect, ref scrollPosition, scrollContentRect);
                 scrollListing.Begin(scrollContentRect);
 
+                var alternate = false;
                 foreach (var animal in animals)
                 {
                     var modInfo = animal.modContentPack?.Name;
                     var rowRect = scrollListing.GetRect(50);
+                    alternate = !alternate;
+                    if (alternate)
+                    {
+                        Widgets.DrawBoxSolid(rowRect.ExpandedBy(10, 0), alternateBackground);
+                    }
+
                     var sliderRect = new Rect(rowRect.position + new Vector2(iconSize.x, 0),
                         rowRect.size - new Vector2(iconSize.x, 0));
                     var animalTitle = animal.label.CapitalizeFirst();

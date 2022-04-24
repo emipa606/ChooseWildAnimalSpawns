@@ -14,6 +14,8 @@
   <CWAS.undo.button>Undo</CWAS.undo.button>
   <CWAS.save.button>Save</CWAS.save.button>
   <CWAS.copy.button>Copy from...</CWAS.copy.button>
+  <CWAS.ok.button>OK</CWAS.ok.button>
   <CWAS.search>Search animal</CWAS.search>
+  <CWAS.aaWarning>Alpha Animal has its own setting for spawn-rates that also gets applied. For best result, dont change the same animals value in both mods.</CWAS.aaWarning>
   <CWAS.customexists>Has custom spawn-rates defined</CWAS.customexists>
 </LanguageData>
