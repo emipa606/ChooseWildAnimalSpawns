@@ -126,6 +126,7 @@ public static class Main
             var allWildAnimalsInBiome = biome.AllWildAnimals;
             if (!allWildAnimalsInBiome.Any())
             {
+                VanillaSpawnRates[biome.defName] = new List<BiomeAnimalRecord>();
                 continue;
             }
 

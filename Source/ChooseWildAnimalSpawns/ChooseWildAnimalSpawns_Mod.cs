@@ -114,7 +114,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
             currentBiomeAnimalDensity = 0;
             selectedDef = value;
 
-            if (value == null || value == "Settings")
+            if (value is null or "Settings")
             {
                 return;
             }
