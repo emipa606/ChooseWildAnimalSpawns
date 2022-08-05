@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.3.5 - Added reverse settings, change based on animal instead of biome
+
+
 1.3.4 - Fixed setting the spawnrates of biomes that have no spawnrates from the start
 
 

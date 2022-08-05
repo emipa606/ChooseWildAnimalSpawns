@@ -10,12 +10,14 @@
   <CWAS.logging.label>Enable verbose logging</CWAS.logging.label>
   <CWAS.logging.tooltip>Shows verbose logging, for finding errors</CWAS.logging.tooltip>
   <CWAS.version.label>Installed mod-version: {0}</CWAS.version.label>
+  <CWAS.reversemode.label>Reverse settings-mode</CWAS.reversemode.label>
+  <CWAS.reversemode.tooltip>When active, lets you change spawnrates per animal instead of per biome</CWAS.reversemode.tooltip>
   <CWAS.reset.button>Reset</CWAS.reset.button>
   <CWAS.undo.button>Undo</CWAS.undo.button>
   <CWAS.save.button>Save</CWAS.save.button>
   <CWAS.copy.button>Copy from...</CWAS.copy.button>
   <CWAS.ok.button>OK</CWAS.ok.button>
-  <CWAS.search>Search animal</CWAS.search>
+  <CWAS.search>Search</CWAS.search>
   <CWAS.aaWarning>Alpha Animal has its own setting for spawn-rates that also gets applied. For best result, dont change the same animals value in both mods.</CWAS.aaWarning>
   <CWAS.customexists>Has custom spawn-rates defined</CWAS.customexists>
 </LanguageData>

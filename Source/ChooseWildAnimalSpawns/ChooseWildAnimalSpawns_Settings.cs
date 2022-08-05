@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace ChooseWildAnimalSpawns;
@@ -15,6 +16,7 @@ public class ChooseWildAnimalSpawns_Settings : ModSettings
     private List<string> customSpawnRatesKeys;
 
     private List<SaveableDictionary> customSpawnRatesValues;
+    public bool ReverseSettingsMode;
 
     public bool VerboseLogging;
 
@@ -22,6 +24,7 @@ public class ChooseWildAnimalSpawns_Settings : ModSettings
     {
         base.ExposeData();
         Scribe_Values.Look(ref VerboseLogging, "VerboseLogging");
+        Scribe_Values.Look(ref ReverseSettingsMode, "ReverseSettingsMode");
         Scribe_Collections.Look(ref CustomSpawnRates, "CustomSpawnRates", LookMode.Value,
             LookMode.Value,
             ref customSpawnRatesKeys, ref customSpawnRatesValues);
@@ -42,16 +45,34 @@ public class ChooseWildAnimalSpawns_Settings : ModSettings
     }
 
 
-    public void ResetOneValue(string BiomeDefName)
+    public void ResetOneBiome(string biomeDefName)
     {
-        if (CustomSpawnRates.ContainsKey(BiomeDefName))
+        if (CustomSpawnRates.ContainsKey(biomeDefName))
         {
-            CustomSpawnRates.Remove(BiomeDefName);
+            CustomSpawnRates.Remove(biomeDefName);
         }
 
-        if (CustomDensities.ContainsKey(BiomeDefName))
+        if (CustomDensities.ContainsKey(biomeDefName))
         {
-            CustomDensities.Remove(BiomeDefName);
+            CustomDensities.Remove(biomeDefName);
+        }
+
+        Main.ApplyBiomeSettings();
+    }
+
+    public void ResetOneAnimal(string animalKindDefName)
+    {
+        foreach (var saveableDictionary in CustomSpawnRates.Where(saveableDictionary =>
+                     saveableDictionary.Value.dictionary.ContainsKey(animalKindDefName)))
+        {
+            saveableDictionary.Value.dictionary.Remove(animalKindDefName);
+        }
+
+        var emptySets = CustomSpawnRates.Where(pair => !pair.Value.dictionary.Any()).Select(pair => pair.Key).ToList();
+
+        foreach (var emptySet in emptySets)
+        {
+            CustomSpawnRates.Remove(emptySet);
         }
 
         Main.ApplyBiomeSettings();
