@@ -13,6 +13,7 @@
   <CWAS.reversemode.label>Reverse settings-mode</CWAS.reversemode.label>
   <CWAS.reversemode.tooltip>When active, lets you change spawnrates per animal instead of per biome</CWAS.reversemode.tooltip>
   <CWAS.reset.button>Reset</CWAS.reset.button>
+  <CWAS.globalvalue>Change all</CWAS.globalvalue>
   <CWAS.undo.button>Undo</CWAS.undo.button>
   <CWAS.save.button>Save</CWAS.save.button>
   <CWAS.copy.button>Copy from...</CWAS.copy.button>

@@ -4,11 +4,12 @@
 
 This mod is a successor to claustros mod https://steamcommunity.com/sharedfiles/filedetails/?id=2067667371]Disable Wild Animal Spawns
 
-The major difference is that this version allows you to define the spawn-rate per animal per biome instead of the on/off selection. 
+The major difference is that this version allows you to define the spawn-rate per biome per animal instead of the on/off selection. 
 The other difference it that you can modify any animal, vanilla and modded.
 
 Added a slider for the overall animal density per biome as well.
 Also option to copy values between biomes.
+There is also a reverse option to select an animal and define spawnrate per biome.
 
 If you need higher accuracy than what the sliders provide, try adding the  https://steamcommunity.com/sharedfiles/filedetails/?id=2218078784]BetterSliders mod
 	

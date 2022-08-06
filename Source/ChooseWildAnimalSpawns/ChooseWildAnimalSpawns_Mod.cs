@@ -51,6 +51,8 @@ public class ChooseWildAnimalSpawns_Mod : Mod
 
     private static bool aaWarningShown;
 
+    private static float globalValue;
+
     private static readonly Color alternateBackground = new Color(0.1f, 0.1f, 0.1f, 0.5f);
 
 
@@ -575,6 +577,8 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 Rect scrollContentRect;
                 Listing_Standard scrollListing;
                 bool alternate;
+                float currentGlobal;
+                bool forceGlobal;
                 if (instance.Settings.ReverseSettingsMode)
                 {
                     if (instance.Settings.CustomSpawnRates?.Any(
@@ -651,9 +655,25 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                     Widgets.BeginScrollView(borderRect, ref scrollPosition, scrollContentRect);
                     scrollListing.Begin(scrollContentRect);
 
-                    alternate = false;
+                    alternate = true;
+                    currentGlobal = globalValue;
+                    globalValue =
+                        (float)Math.Round((decimal)Widgets.HorizontalSlider(
+                            scrollListing.GetRect(50),
+                            globalValue, 0,
+                            3f, false,
+                            globalValue.ToString("N4")
+                                .TrimEnd('0').TrimEnd('.'),
+                            "CWAS.globalvalue".Translate()), 4);
+                    forceGlobal = currentGlobal != globalValue;
+
                     foreach (var biomeDef in biomes)
                     {
+                        if (forceGlobal)
+                        {
+                            currentAnimalBiomeRecords[biomeDef] = globalValue;
+                        }
+
                         var modInfo = biomeDef.modContentPack?.Name;
                         var rowRect = scrollListing.GetRect(50);
                         alternate = !alternate;
@@ -788,8 +808,23 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 scrollListing.Begin(scrollContentRect);
 
                 alternate = false;
+                currentGlobal = globalValue;
+                globalValue =
+                    (float)Math.Round((decimal)Widgets.HorizontalSlider(
+                        scrollListing.GetRect(50),
+                        globalValue, 0,
+                        3f, false,
+                        globalValue.ToString("N4")
+                            .TrimEnd('0').TrimEnd('.'),
+                        "CWAS.globalvalue".Translate()), 4);
+                forceGlobal = currentGlobal != globalValue;
                 foreach (var animal in animals)
                 {
+                    if (forceGlobal)
+                    {
+                        currentBiomeAnimalRecords[animal] = globalValue;
+                    }
+
                     var modInfo = animal.modContentPack?.Name;
                     var rowRect = scrollListing.GetRect(50);
                     alternate = !alternate;
