@@ -79,27 +79,27 @@ public static class Main
         {
             var biomeAnimalList = new List<BiomeAnimalRecord>();
             var customBiomeDefs = new Dictionary<string, float>();
-            if (costumSpawnRates.ContainsKey(biome.defName))
+            if (costumSpawnRates.TryGetValue(biome.defName, out var rate))
             {
-                customBiomeDefs = costumSpawnRates[biome.defName].dictionary;
+                customBiomeDefs = rate.dictionary;
             }
 
-            biome.animalDensity = customDensities?.ContainsKey(biome.defName) == true
-                ? customDensities[biome.defName]
+            biome.animalDensity = customDensities?.TryGetValue(biome.defName, out var density) is true
+                ? density
                 : VanillaDensities[biome.defName];
 
             var vanillaBiomeDefs = new List<BiomeAnimalRecord>();
-            if (VanillaSpawnRates.ContainsKey(biome.defName))
+            if (VanillaSpawnRates.TryGetValue(biome.defName, out var spawnRate))
             {
-                vanillaBiomeDefs = VanillaSpawnRates[biome.defName];
+                vanillaBiomeDefs = spawnRate;
             }
 
             foreach (var pawnKindDef in AllAnimals)
             {
-                if (customBiomeDefs.ContainsKey(pawnKindDef.defName))
+                if (customBiomeDefs.TryGetValue(pawnKindDef.defName, out var def))
                 {
                     biomeAnimalList.Add(new BiomeAnimalRecord
-                        { animal = pawnKindDef, commonality = customBiomeDefs[pawnKindDef.defName] });
+                        { animal = pawnKindDef, commonality = def });
                     continue;
                 }
 
@@ -126,7 +126,7 @@ public static class Main
             var allWildAnimalsInBiome = biome.AllWildAnimals;
             if (!allWildAnimalsInBiome.Any())
             {
-                VanillaSpawnRates[biome.defName] = new List<BiomeAnimalRecord>();
+                VanillaSpawnRates[biome.defName] = [];
                 continue;
             }
 
@@ -134,16 +134,13 @@ public static class Main
             var cachedCommonailtiesTraverse = Traverse.Create(biome).Field("cachedAnimalCommonalities");
             if (cachedCommonailtiesTraverse.GetValue() == null)
             {
-                var unused = biome.CommonalityOfAnimal(AllAnimals.First());
+                _ = biome.CommonalityOfAnimal(AllAnimals.First());
             }
 
             var cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();
             foreach (var animal in biome.AllWildAnimals)
             {
-                if (!cachedAnimalCommonalities.TryGetValue(animal, out var commonality))
-                {
-                    commonality = 0f;
-                }
+                var commonality = cachedAnimalCommonalities.GetValueOrDefault(animal, 0f);
 
                 currentBiomeRecord.Add(new BiomeAnimalRecord
                     { animal = animal, commonality = commonality });
@@ -163,9 +160,10 @@ public static class Main
                 continue;
             }
 
-            Traverse.Create(biome).Field("wildAnimals").SetValue(!VanillaSpawnRates.ContainsKey(biome.defName)
-                ? new List<BiomeAnimalRecord>()
-                : VanillaSpawnRates[biome.defName]);
+            Traverse.Create(biome).Field("wildAnimals").SetValue(
+                !VanillaSpawnRates.TryGetValue(biome.defName, out var rate)
+                    ? []
+                    : rate);
 
             Traverse.Create(biome).Field("cachedAnimalCommonalities").SetValue(null);
         }

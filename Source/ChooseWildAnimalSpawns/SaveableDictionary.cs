@@ -3,19 +3,13 @@ using System.Collections.Generic;
 
 namespace ChooseWildAnimalSpawns;
 
-public class SaveableDictionary
+public class SaveableDictionary(Dictionary<string, float> dictionary)
 {
-    public SaveableDictionary()
+    public SaveableDictionary() : this(new Dictionary<string, float>())
     {
-        dictionary = new Dictionary<string, float>();
     }
 
-    public SaveableDictionary(Dictionary<string, float> dictionary)
-    {
-        this.dictionary = dictionary;
-    }
-
-    public Dictionary<string, float> dictionary { get; }
+    public Dictionary<string, float> dictionary { get; } = dictionary;
 
     public override string ToString()
     {

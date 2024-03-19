@@ -6,13 +6,12 @@ using Verse.Sound;
 [StaticConstructorOnStartup]
 public static class ListingExtension
 {
-    public static bool ListItemSelectable(this Listing lister, string header, Color hoverColor, out Vector2 position,
+    public static bool ListItemSelectable(this Listing lister, string header, Color hoverColor,
         bool selected = false, bool visualize = false, string toolTip = null)
     {
         var anchor = Text.Anchor;
         var color = GUI.color;
         var rect = lister.GetRect(24f);
-        position = rect.position;
         if (selected)
         {
             Widgets.DrawBoxSolid(rect, new Color(0.1f, 0.1f, 0.1f, 0.5f));

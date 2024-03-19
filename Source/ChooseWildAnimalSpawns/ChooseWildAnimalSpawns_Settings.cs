@@ -35,11 +35,11 @@ public class ChooseWildAnimalSpawns_Settings : ModSettings
 
     public void ResetManualValues()
     {
-        customSpawnRatesKeys = new List<string>();
-        customSpawnRatesValues = new List<SaveableDictionary>();
+        customSpawnRatesKeys = [];
+        customSpawnRatesValues = [];
         CustomSpawnRates = new Dictionary<string, SaveableDictionary>();
-        customDensitiesKeys = new List<string>();
-        customDensitiesValues = new List<float>();
+        customDensitiesKeys = [];
+        customDensitiesValues = [];
         CustomDensities = new Dictionary<string, float>();
         Main.ApplyBiomeSettings();
     }
