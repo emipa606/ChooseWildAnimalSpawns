@@ -4,7 +4,7 @@ using Verse;
 
 namespace ChooseWildAnimalSpawns;
 
-public class ChooseWildAnimalSpawnsSettings : ModSettings
+public class ChooseWildAnimalSpawns_Settings : ModSettings
 {
     public Dictionary<string, float> CustomDensities = new();
     private List<string> customDensitiesKeys;

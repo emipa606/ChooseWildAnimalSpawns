@@ -10,7 +10,7 @@ using Verse.Sound;
 
 namespace ChooseWildAnimalSpawns.Settings;
 
-public class ChooseWildAnimalSpawnsMod : Mod
+public class ChooseWildAnimalSpawns_Mod : Mod
 {
     private const int ButtonSpacer = 200;
 
@@ -19,7 +19,7 @@ public class ChooseWildAnimalSpawnsMod : Mod
     /// <summary>
     ///     The instance of the settings to be read by the mod
     /// </summary>
-    public static ChooseWildAnimalSpawnsMod Instance;
+    public static ChooseWildAnimalSpawns_Mod Instance;
 
     private static readonly Vector2 buttonSize = new(120f, 25f);
 
@@ -59,13 +59,13 @@ public class ChooseWildAnimalSpawnsMod : Mod
     /// <summary>
     ///     The private settings
     /// </summary>
-    private ChooseWildAnimalSpawnsSettings settings;
+    private ChooseWildAnimalSpawns_Settings settings;
 
     /// <summary>
     ///     Constructor
     /// </summary>
     /// <param name="content"></param>
-    public ChooseWildAnimalSpawnsMod(ModContentPack content)
+    public ChooseWildAnimalSpawns_Mod(ModContentPack content)
         : base(content)
     {
         Instance = this;
@@ -81,11 +81,11 @@ public class ChooseWildAnimalSpawnsMod : Mod
     /// <summary>
     ///     The instance-settings for the mod
     /// </summary>
-    internal ChooseWildAnimalSpawnsSettings Settings
+    internal ChooseWildAnimalSpawns_Settings Settings
     {
         get
         {
-            settings ??= GetSettings<ChooseWildAnimalSpawnsSettings>();
+            settings ??= GetSettings<ChooseWildAnimalSpawns_Settings>();
 
             return settings;
         }
@@ -366,7 +366,7 @@ public class ChooseWildAnimalSpawnsMod : Mod
         listingStandard = new Listing_Standard();
 
         drawOptions(rect2);
-        DrawTabsList(rect2);
+        drawTabsList(rect2);
         Settings.Write();
         if (aaWarningShown || ModLister.GetActiveModWithIdentifier("sarg.alphaanimals", true) == null)
         {
@@ -955,7 +955,7 @@ public class ChooseWildAnimalSpawnsMod : Mod
         Find.WindowStack.Add(new FloatMenu(list));
     }
 
-    private static void DrawTabsList(Rect rect)
+    private static void drawTabsList(Rect rect)
     {
         var scrollContainer = rect.ContractedBy(10);
         scrollContainer.width = leftSideWidth;

@@ -70,8 +70,8 @@ public static class Main
 
     public static void ApplyBiomeSettings()
     {
-        var customSpawnRates = ChooseWildAnimalSpawnsMod.Instance.Settings.CustomSpawnRates;
-        var customDensities = ChooseWildAnimalSpawnsMod.Instance.Settings.CustomDensities;
+        var customSpawnRates = ChooseWildAnimalSpawns_Mod.Instance.Settings.CustomSpawnRates;
+        var customDensities = ChooseWildAnimalSpawns_Mod.Instance.Settings.CustomDensities;
         var biomes = AllBiomes;
         foreach (var biome in biomes)
         {
@@ -157,7 +157,7 @@ public static class Main
             return;
         }
 
-        if (!forced && !ChooseWildAnimalSpawnsMod.Instance.Settings.VerboseLogging)
+        if (!forced && !ChooseWildAnimalSpawns_Mod.Instance.Settings.VerboseLogging)
         {
             return;
         }

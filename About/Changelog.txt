@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.5.2 - Restored uninstended class-name change for settings
+
+
 1.5.1 - Added tooltip for biomes and animals showing defName, what mod they are from and their description to more easily distinguing between similar modded items
 
 
