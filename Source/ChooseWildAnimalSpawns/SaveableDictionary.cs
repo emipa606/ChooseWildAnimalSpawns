@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ChooseWildAnimalSpawns;
 
@@ -13,24 +12,28 @@ public class SaveableDictionary(Dictionary<string, float> dictionary)
 
     public override string ToString()
     {
-        var returnvalue = string.Empty;
+        var returnValue = string.Empty;
 
         foreach (var keyValuePair in dictionary)
         {
-            returnvalue += $"#{keyValuePair.Key}:{keyValuePair.Value}";
+            returnValue += $"#{keyValuePair.Key}:{keyValuePair.Value}";
         }
 
-        return returnvalue;
+        return returnValue;
     }
 
-    public static SaveableDictionary FromString(string Str)
+    public static SaveableDictionary FromString(string dictionaryString)
     {
-        Str = Str.TrimStart('#');
-        var array = Str.Split('#');
+        dictionaryString = dictionaryString.TrimStart('#');
+        var array = dictionaryString.Split('#');
         var returnValue = new Dictionary<string, float>();
         foreach (var s in array)
         {
-            returnValue[s.Split(':')[0]] = Convert.ToSingle(s.Split(':')[1]);
+            var parts = s.Split(':');
+            if (parts.Length == 2 && float.TryParse(parts[1], out var value))
+            {
+                returnValue[parts[0]] = value;
+            }
         }
 
         return new SaveableDictionary(returnValue);

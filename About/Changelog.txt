@@ -1,5 +1,8 @@
 # Changelog for ChooseWildAnimalSpawns
 
+1.5.1 - Added tooltip for biomes and animals showing defName, what mod they are from and their description to more easily distinguing between similar modded items
+
+
 1.5.0 - Mod updated for 1.5 and passed autotests
 Used DeepL to update translations for ChineseSimplified, French, German
 

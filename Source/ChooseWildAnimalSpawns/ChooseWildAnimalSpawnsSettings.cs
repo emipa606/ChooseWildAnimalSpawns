@@ -4,14 +4,13 @@ using Verse;
 
 namespace ChooseWildAnimalSpawns;
 
-public class ChooseWildAnimalSpawns_Settings : ModSettings
+public class ChooseWildAnimalSpawnsSettings : ModSettings
 {
-    public Dictionary<string, float> CustomDensities = new Dictionary<string, float>();
+    public Dictionary<string, float> CustomDensities = new();
     private List<string> customDensitiesKeys;
     private List<float> customDensitiesValues;
 
-    public Dictionary<string, SaveableDictionary> CustomSpawnRates =
-        new Dictionary<string, SaveableDictionary>();
+    public Dictionary<string, SaveableDictionary> CustomSpawnRates = new();
 
     private List<string> customSpawnRatesKeys;
 
@@ -47,25 +46,19 @@ public class ChooseWildAnimalSpawns_Settings : ModSettings
 
     public void ResetOneBiome(string biomeDefName)
     {
-        if (CustomSpawnRates.ContainsKey(biomeDefName))
-        {
-            CustomSpawnRates.Remove(biomeDefName);
-        }
+        CustomSpawnRates.Remove(biomeDefName);
 
-        if (CustomDensities.ContainsKey(biomeDefName))
-        {
-            CustomDensities.Remove(biomeDefName);
-        }
+        CustomDensities.Remove(biomeDefName);
 
         Main.ApplyBiomeSettings();
     }
 
     public void ResetOneAnimal(string animalKindDefName)
     {
-        foreach (var saveableDictionary in CustomSpawnRates.Where(saveableDictionary =>
+        foreach (var savableDictionary in CustomSpawnRates.Where(saveableDictionary =>
                      saveableDictionary.Value.dictionary.ContainsKey(animalKindDefName)))
         {
-            saveableDictionary.Value.dictionary.Remove(animalKindDefName);
+            savableDictionary.Value.dictionary.Remove(animalKindDefName);
         }
 
         var emptySets = CustomSpawnRates.Where(pair => !pair.Value.dictionary.Any()).Select(pair => pair.Key).ToList();

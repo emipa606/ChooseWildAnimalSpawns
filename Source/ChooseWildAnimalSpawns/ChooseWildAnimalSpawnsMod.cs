@@ -10,26 +10,26 @@ using Verse.Sound;
 
 namespace ChooseWildAnimalSpawns.Settings;
 
-public class ChooseWildAnimalSpawns_Mod : Mod
+public class ChooseWildAnimalSpawnsMod : Mod
 {
+    private const int ButtonSpacer = 200;
+
+    private const float ColumnSpacer = 0.1f;
+
     /// <summary>
     ///     The instance of the settings to be read by the mod
     /// </summary>
-    public static ChooseWildAnimalSpawns_Mod instance;
+    public static ChooseWildAnimalSpawnsMod Instance;
 
-    private static readonly Vector2 buttonSize = new Vector2(120f, 25f);
+    private static readonly Vector2 buttonSize = new(120f, 25f);
 
-    private static readonly Vector2 searchSize = new Vector2(200f, 25f);
+    private static readonly Vector2 searchSize = new(200f, 25f);
 
-    private static readonly Vector2 iconSize = new Vector2(48f, 48f);
-
-    private static readonly int buttonSpacer = 200;
-
-    private static readonly float columnSpacer = 0.1f;
+    private static readonly Vector2 iconSize = new(48f, 48f);
 
     private static float leftSideWidth;
 
-    private static Listing_Standard listing_Standard;
+    private static Listing_Standard listingStandard;
 
     private static Vector2 tabsScrollPosition;
 
@@ -53,32 +53,26 @@ public class ChooseWildAnimalSpawns_Mod : Mod
 
     private static float globalValue;
 
-    private static readonly Color alternateBackground = new Color(0.1f, 0.1f, 0.1f, 0.5f);
+    private static readonly Color alternateBackground = new(0.1f, 0.1f, 0.1f, 0.5f);
 
 
     /// <summary>
     ///     The private settings
     /// </summary>
-    private ChooseWildAnimalSpawns_Settings settings;
+    private ChooseWildAnimalSpawnsSettings settings;
 
     /// <summary>
     ///     Constructor
     /// </summary>
     /// <param name="content"></param>
-    public ChooseWildAnimalSpawns_Mod(ModContentPack content)
+    public ChooseWildAnimalSpawnsMod(ModContentPack content)
         : base(content)
     {
-        instance = this;
+        Instance = this;
         ParseHelper.Parsers<SaveableDictionary>.Register(SaveableDictionary.FromString);
-        if (instance.Settings.CustomSpawnRates == null)
-        {
-            instance.Settings.CustomSpawnRates = new Dictionary<string, SaveableDictionary>();
-        }
+        Instance.Settings.CustomSpawnRates ??= new Dictionary<string, SaveableDictionary>();
 
-        if (instance.Settings.CustomDensities == null)
-        {
-            instance.Settings.CustomDensities = new Dictionary<string, float>();
-        }
+        Instance.Settings.CustomDensities ??= new Dictionary<string, float>();
 
         currentVersion =
             VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
@@ -87,14 +81,11 @@ public class ChooseWildAnimalSpawns_Mod : Mod
     /// <summary>
     ///     The instance-settings for the mod
     /// </summary>
-    internal ChooseWildAnimalSpawns_Settings Settings
+    internal ChooseWildAnimalSpawnsSettings Settings
     {
         get
         {
-            if (settings == null)
-            {
-                settings = GetSettings<ChooseWildAnimalSpawns_Settings>();
-            }
+            settings ??= GetSettings<ChooseWildAnimalSpawnsSettings>();
 
             return settings;
         }
@@ -124,21 +115,21 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 return;
             }
 
-            Traverse cachedCommonailtiesTraverse;
+            Traverse cachedCommonalitiesTraverse;
             Dictionary<PawnKindDef, float> cachedAnimalCommonalities;
-            if (instance.Settings.ReverseSettingsMode)
+            if (Instance.Settings.ReverseSettingsMode)
             {
                 var selectedAnimalDef = PawnKindDef.Named(selectedDef);
                 foreach (var biomeDef in Main.AllBiomes)
                 {
-                    cachedCommonailtiesTraverse = Traverse.Create(biomeDef)
+                    cachedCommonalitiesTraverse = Traverse.Create(biomeDef)
                         .Field("cachedAnimalCommonalities");
-                    if (cachedCommonailtiesTraverse.GetValue() == null)
+                    if (cachedCommonalitiesTraverse.GetValue() == null)
                     {
                         _ = biomeDef.CommonalityOfAnimal(selectedAnimalDef);
                     }
 
-                    cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();
+                    cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonalitiesTraverse.GetValue();
 
                     var commonality = cachedAnimalCommonalities.GetValueOrDefault(selectedAnimalDef, 0f);
 
@@ -161,13 +152,13 @@ public class ChooseWildAnimalSpawns_Mod : Mod
 
             var selectedBiome = BiomeDef.Named(selectedDef);
             currentBiomeAnimalDensity = selectedBiome.animalDensity;
-            cachedCommonailtiesTraverse = Traverse.Create(selectedBiome).Field("cachedAnimalCommonalities");
-            if (cachedCommonailtiesTraverse.GetValue() == null)
+            cachedCommonalitiesTraverse = Traverse.Create(selectedBiome).Field("cachedAnimalCommonalities");
+            if (cachedCommonalitiesTraverse.GetValue() == null)
             {
                 _ = selectedBiome.CommonalityOfAnimal(Main.AllAnimals.First());
             }
 
-            cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();
+            cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonalitiesTraverse.GetValue();
 
             foreach (var animal in Main.AllAnimals)
             {
@@ -203,16 +194,16 @@ public class ChooseWildAnimalSpawns_Mod : Mod
             return;
         }
 
-        if (instance.Settings.ReverseSettingsMode)
+        if (Instance.Settings.ReverseSettingsMode)
         {
-            SaveAnimalSetting();
+            saveAnimalSetting();
             return;
         }
 
-        SaveABiomeSetting(SelectedDef);
+        saveABiomeSetting(SelectedDef);
     }
 
-    private static void SaveAnimalSetting()
+    private static void saveAnimalSetting()
     {
         try
         {
@@ -246,14 +237,13 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 if (vanillaValue != null && vanillaValue.commonality.ToString() ==
                     currentAnimalBiomeRecords[biomeDef].ToString())
                 {
-                    if (instance.Settings.CustomSpawnRates.ContainsKey(biomeDefName) && instance.Settings
-                            .CustomSpawnRates[biomeDefName].dictionary.ContainsKey(SelectedDef))
+                    if (Instance.Settings.CustomSpawnRates.ContainsKey(biomeDefName) && Instance.Settings
+                            .CustomSpawnRates[biomeDefName].dictionary.Remove(SelectedDef))
                     {
-                        instance.Settings.CustomSpawnRates[biomeDefName].dictionary.Remove(SelectedDef);
-                        if (!instance.Settings.CustomSpawnRates[biomeDefName].dictionary.Any())
+                        if (!Instance.Settings.CustomSpawnRates[biomeDefName].dictionary.Any())
                         {
                             Main.LogMessage($"currentBiomeList for {biomeDefName} empty");
-                            instance.Settings.CustomSpawnRates.Remove(biomeDefName);
+                            Instance.Settings.CustomSpawnRates.Remove(biomeDefName);
                         }
                     }
 
@@ -268,12 +258,12 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 Main.LogMessage(
                     $"{animal.label} in {biomeDefName}: chosen value {currentAnimalBiomeRecords[biomeDef]}, vanilla value {vanillaValue?.commonality}");
 
-                if (!instance.Settings.CustomSpawnRates.ContainsKey(biomeDefName))
+                if (!Instance.Settings.CustomSpawnRates.ContainsKey(biomeDefName))
                 {
-                    instance.Settings.CustomSpawnRates[biomeDefName] = new SaveableDictionary();
+                    Instance.Settings.CustomSpawnRates[biomeDefName] = new SaveableDictionary();
                 }
 
-                instance.Settings.CustomSpawnRates[biomeDefName].dictionary[SelectedDef] =
+                Instance.Settings.CustomSpawnRates[biomeDefName].dictionary[SelectedDef] =
                     currentAnimalBiomeRecords[biomeDef];
             }
 
@@ -286,20 +276,17 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         }
     }
 
-    private static void SaveABiomeSetting(string biomeDefName)
+    private static void saveABiomeSetting(string biomeDefName)
     {
         try
         {
             if (currentBiomeAnimalDensity == Main.VanillaDensities[biomeDefName])
             {
-                if (instance.Settings.CustomDensities?.ContainsKey(biomeDefName) == true)
-                {
-                    instance.Settings.CustomDensities.Remove(biomeDefName);
-                }
+                Instance.Settings.CustomDensities?.Remove(biomeDefName);
             }
             else
             {
-                instance.Settings.CustomDensities[biomeDefName] = currentBiomeAnimalDensity;
+                Instance.Settings.CustomDensities[biomeDefName] = currentBiomeAnimalDensity;
             }
 
             if (currentBiomeAnimalRecords == null)
@@ -347,10 +334,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
 
             if (!currentBiomeList.Any())
             {
-                if (instance.Settings.CustomSpawnRates.ContainsKey(biomeDefName))
-                {
-                    instance.Settings.CustomSpawnRates.Remove(biomeDefName);
-                }
+                Instance.Settings.CustomSpawnRates.Remove(biomeDefName);
 
                 currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
                 currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
@@ -358,7 +342,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 return;
             }
 
-            instance.Settings.CustomSpawnRates[biomeDefName] = new SaveableDictionary(currentBiomeList);
+            Instance.Settings.CustomSpawnRates[biomeDefName] = new SaveableDictionary(currentBiomeList);
             currentBiomeAnimalRecords = new Dictionary<PawnKindDef, float>();
             currentBiomeAnimalDecimals = new Dictionary<PawnKindDef, int>();
         }
@@ -379,12 +363,12 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         var rect2 = rect.ContractedBy(1);
         leftSideWidth = rect2.ContractedBy(10).width / 4;
 
-        listing_Standard = new Listing_Standard();
+        listingStandard = new Listing_Standard();
 
-        DrawOptions(rect2);
+        drawOptions(rect2);
         DrawTabsList(rect2);
         Settings.Write();
-        if (aaWarningShown || ModLister.GetActiveModWithIdentifier("sarg.alphaanimals") == null)
+        if (aaWarningShown || ModLister.GetActiveModWithIdentifier("sarg.alphaanimals", true) == null)
         {
             return;
         }
@@ -405,7 +389,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
     }
 
 
-    private static void DrawButton(Action action, string text, Vector2 pos)
+    private static void drawButton(Action action, string text, Vector2 pos)
     {
         var rect = new Rect(pos.x, pos.y, buttonSize.x, buttonSize.y);
         if (!Widgets.ButtonText(rect, text, true, false, Color.white))
@@ -418,7 +402,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
     }
 
 
-    private void DrawIcon(PawnKindDef pawnKind, Rect rect)
+    private static void drawIcon(PawnKindDef pawnKind, Rect rect)
     {
         var texture2D = pawnKind?.lifeStages?.Last()?.bodyGraphicData?.Graphic?.MatSingle?.mainTexture;
 
@@ -448,16 +432,16 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         TooltipHandler.TipRegion(rect, toolTip);
     }
 
-    private void DrawOptions(Rect rect)
+    private void drawOptions(Rect rect)
     {
         var optionsOuterContainer = rect.ContractedBy(10);
-        optionsOuterContainer.x += leftSideWidth + columnSpacer;
-        optionsOuterContainer.width -= leftSideWidth + columnSpacer;
+        optionsOuterContainer.x += leftSideWidth + ColumnSpacer;
+        optionsOuterContainer.width -= leftSideWidth + ColumnSpacer;
         Widgets.DrawBoxSolid(optionsOuterContainer, Color.grey);
         var optionsInnerContainer = optionsOuterContainer.ContractedBy(1);
         Widgets.DrawBoxSolid(optionsInnerContainer, new ColorInt(42, 43, 44).ToColor);
         var frameRect = optionsInnerContainer.ContractedBy(10);
-        frameRect.x = leftSideWidth + columnSpacer + 20;
+        frameRect.x = leftSideWidth + ColumnSpacer + 20;
         frameRect.y += 15;
         frameRect.height -= 15;
         var contentRect = frameRect;
@@ -469,40 +453,40 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 return;
             case "Settings":
             {
-                listing_Standard.Begin(frameRect);
+                listingStandard.Begin(frameRect);
                 Text.Font = GameFont.Medium;
-                listing_Standard.Label("CWAS.settings".Translate());
+                listingStandard.Label("CWAS.settings".Translate());
                 Text.Font = GameFont.Small;
-                listing_Standard.Gap();
+                listingStandard.Gap();
 
-                if (instance.Settings.CustomSpawnRates?.Any() == true ||
-                    instance.Settings.CustomDensities?.Any() == true)
+                if (Instance.Settings.CustomSpawnRates?.Any() == true ||
+                    Instance.Settings.CustomDensities?.Any() == true)
                 {
-                    var labelPoint = listing_Standard.Label("CWAS.resetall.label".Translate(), -1F,
+                    var labelPoint = listingStandard.Label("CWAS.resetall.label".Translate(), -1F,
                         "CWAS.resetall.tooltip".Translate());
-                    DrawButton(() =>
+                    drawButton(() =>
                         {
                             Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(
                                 "CWAS.resetall.confirm".Translate(),
-                                delegate { instance.Settings.ResetManualValues(); }));
+                                delegate { Instance.Settings.ResetManualValues(); }));
                         }, "CWAS.resetall.button".Translate(),
-                        new Vector2(labelPoint.position.x + buttonSpacer, labelPoint.position.y));
+                        new Vector2(labelPoint.position.x + ButtonSpacer, labelPoint.position.y));
                 }
 
-                listing_Standard.CheckboxLabeled("CWAS.reversemode.label".Translate(),
-                    ref instance.Settings.ReverseSettingsMode,
+                listingStandard.CheckboxLabeled("CWAS.reversemode.label".Translate(),
+                    ref Instance.Settings.ReverseSettingsMode,
                     "CWAS.reversemode.tooltip".Translate());
-                listing_Standard.CheckboxLabeled("CWAS.logging.label".Translate(), ref Settings.VerboseLogging,
+                listingStandard.CheckboxLabeled("CWAS.logging.label".Translate(), ref Settings.VerboseLogging,
                     "CWAS.logging.tooltip".Translate());
                 if (currentVersion != null)
                 {
-                    listing_Standard.Gap();
+                    listingStandard.Gap();
                     GUI.contentColor = Color.gray;
-                    listing_Standard.Label("CWAS.version.label".Translate(currentVersion));
+                    listingStandard.Label("CWAS.version.label".Translate(currentVersion));
                     GUI.contentColor = Color.white;
                 }
 
-                listing_Standard.End();
+                listingStandard.End();
                 break;
             }
 
@@ -512,13 +496,13 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 PawnKindDef currentAnimalDef = null;
                 string description;
                 Rect headerLabel;
-                listing_Standard.Begin(frameRect);
-                if (instance.Settings.ReverseSettingsMode)
+                listingStandard.Begin(frameRect);
+                if (Instance.Settings.ReverseSettingsMode)
                 {
                     currentAnimalDef = PawnKindDef.Named(SelectedDef);
                     if (currentAnimalDef == null)
                     {
-                        listing_Standard.End();
+                        listingStandard.End();
                         break;
                     }
 
@@ -528,14 +512,14 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                         description = currentAnimalDef.defName;
                     }
 
-                    headerLabel = listing_Standard.Label(currentAnimalDef.label.CapitalizeFirst());
+                    headerLabel = listingStandard.Label(currentAnimalDef.label.CapitalizeFirst());
                 }
                 else
                 {
                     currentBiomeDef = BiomeDef.Named(SelectedDef);
                     if (currentBiomeDef == null)
                     {
-                        listing_Standard.End();
+                        listingStandard.End();
                         break;
                     }
 
@@ -545,7 +529,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                         description = currentBiomeDef.defName;
                     }
 
-                    headerLabel = listing_Standard.Label(currentBiomeDef.label.CapitalizeFirst());
+                    headerLabel = listingStandard.Label(currentBiomeDef.label.CapitalizeFirst());
                 }
 
 
@@ -571,12 +555,12 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 bool alternate;
                 float currentGlobal;
                 bool forceGlobal;
-                if (instance.Settings.ReverseSettingsMode)
+                if (Instance.Settings.ReverseSettingsMode)
                 {
-                    if (instance.Settings.CustomSpawnRates?.Any(
-                            pair => pair.Value.dictionary.ContainsKey(SelectedDef)) == true)
+                    if (Instance.Settings.CustomSpawnRates?.Any(pair =>
+                            pair.Value.dictionary.ContainsKey(SelectedDef)) == true)
                     {
-                        DrawButton(() =>
+                        drawButton(() =>
                             {
                                 if (currentAnimalDef != null)
                                 {
@@ -584,20 +568,20 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                                         "CWAS.resetone.confirm".Translate(currentAnimalDef.LabelCap),
                                         delegate
                                         {
-                                            instance.Settings.ResetOneAnimal(SelectedDef);
+                                            Instance.Settings.ResetOneAnimal(SelectedDef);
                                             var selectedAnimal = PawnKindDef.Named(SelectedDef);
                                             foreach (var biomeDef in Main.AllBiomes)
                                             {
-                                                var cachedCommonailtiesTraverse = Traverse.Create(biomeDef)
+                                                var cachedCommonalitiesTraverse = Traverse.Create(biomeDef)
                                                     .Field("cachedAnimalCommonalities");
-                                                if (cachedCommonailtiesTraverse.GetValue() == null)
+                                                if (cachedCommonalitiesTraverse.GetValue() == null)
                                                 {
                                                     _ = biomeDef.CommonalityOfAnimal(selectedAnimal);
                                                 }
 
                                                 var cachedAnimalCommonalities =
                                                     (Dictionary<PawnKindDef, float>)
-                                                    cachedCommonailtiesTraverse.GetValue();
+                                                    cachedCommonalitiesTraverse.GetValue();
 
                                                 var commonality =
                                                     cachedAnimalCommonalities.GetValueOrDefault(selectedAnimal, 0f);
@@ -622,10 +606,10 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                                 headerLabel.position.y));
                     }
 
-                    DrawButton(delegate { CopyOtherAnimalValues(SelectedDef); }, "CWAS.copy.button".Translate(),
+                    drawButton(delegate { copyOtherAnimalValues(SelectedDef); }, "CWAS.copy.button".Translate(),
                         headerLabel.position + new Vector2(frameRect.width - buttonSize.x, 0));
 
-                    listing_Standard.End();
+                    listingStandard.End();
                     var biomes = Main.AllBiomes;
                     if (!string.IsNullOrEmpty(searchText))
                     {
@@ -686,8 +670,8 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                             modInfo = $"{modInfo.Substring(0, 27)}...";
                         }
 
-                        if (instance.Settings.CustomSpawnRates != null && instance.Settings
-                                .CustomSpawnRates.ContainsKey(biomeDef.defName) && instance.Settings
+                        if (Instance.Settings.CustomSpawnRates != null && Instance.Settings
+                                .CustomSpawnRates.ContainsKey(biomeDef.defName) && Instance.Settings
                                 .CustomSpawnRates[biomeDef.defName].dictionary?.ContainsKey(SelectedDef) == true)
                         {
                             GUI.color = Color.green;
@@ -710,10 +694,10 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                     break;
                 }
 
-                if (instance.Settings.CustomSpawnRates?.ContainsKey(SelectedDef) == true ||
-                    instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
+                if (Instance.Settings.CustomSpawnRates?.ContainsKey(SelectedDef) == true ||
+                    Instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
                 {
-                    DrawButton(() =>
+                    drawButton(() =>
                         {
                             if (currentBiomeDef != null)
                             {
@@ -721,7 +705,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                                     "CWAS.resetone.confirm".Translate(currentBiomeDef.LabelCap),
                                     delegate
                                     {
-                                        instance.Settings.ResetOneBiome(SelectedDef);
+                                        Instance.Settings.ResetOneBiome(SelectedDef);
                                         currentBiomeAnimalDensity = Main.VanillaDensities[SelectedDef];
                                         var selectedBiome = BiomeDef.Named(SelectedDef);
                                         var cachedCommonailtiesTraverse = Traverse.Create(selectedBiome)
@@ -759,23 +743,23 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 }
 
 
-                DrawButton(delegate { CopySpawnValues(SelectedDef); }, "CWAS.copy.button".Translate(),
+                drawButton(delegate { copySpawnValues(SelectedDef); }, "CWAS.copy.button".Translate(),
                     headerLabel.position + new Vector2(frameRect.width - buttonSize.x, 0));
-                if (instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
+                if (Instance.Settings.CustomDensities?.ContainsKey(SelectedDef) == true)
                 {
                     GUI.color = Color.green;
                 }
 
-                listing_Standard.Gap();
+                listingStandard.Gap();
                 currentBiomeAnimalDensity =
                     (float)Math.Round((decimal)Widgets.HorizontalSlider(
-                        listing_Standard.GetRect(50),
+                        listingStandard.GetRect(50),
                         currentBiomeAnimalDensity, 0,
                         6f, false,
                         currentBiomeAnimalDensity.ToString(),
                         "CWAS.density.label".Translate()), 3);
                 GUI.color = Color.white;
-                listing_Standard.End();
+                listingStandard.End();
 
                 var animals = Main.AllAnimals;
                 if (!string.IsNullOrEmpty(searchText))
@@ -838,8 +822,8 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                         modInfo = $"{modInfo.Substring(0, 27)}...";
                     }
 
-                    if (instance.Settings.CustomSpawnRates != null &&
-                        instance.Settings.CustomSpawnRates.ContainsKey(SelectedDef) && instance.Settings
+                    if (Instance.Settings.CustomSpawnRates != null &&
+                        Instance.Settings.CustomSpawnRates.ContainsKey(SelectedDef) && Instance.Settings
                             .CustomSpawnRates[SelectedDef]?.dictionary?.ContainsKey(animal.defName) ==
                         true)
                     {
@@ -856,7 +840,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                             animalTitle,
                             modInfo), currentBiomeAnimalDecimals[animal]);
                     GUI.color = Color.white;
-                    DrawIcon(animal,
+                    drawIcon(animal,
                         new Rect(rowRect.position, iconSize));
                 }
 
@@ -867,7 +851,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         }
     }
 
-    private static void CopySpawnValues(string originalDef)
+    private static void copySpawnValues(string originalDef)
     {
         var list = new List<FloatMenuOption>();
 
@@ -880,7 +864,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
             {
                 Main.LogMessage($"Copying overall animal density from {biome.defName} to {originalDef}");
                 currentBiomeAnimalDensity = Main.VanillaDensities[biome.defName];
-                if (instance.Settings.CustomDensities.TryGetValue(biome.defName, out var density))
+                if (Instance.Settings.CustomDensities.TryGetValue(biome.defName, out var density))
                 {
                     currentBiomeAnimalDensity = density;
                 }
@@ -923,7 +907,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         Find.WindowStack.Add(new FloatMenu(list));
     }
 
-    private static void CopyOtherAnimalValues(string originalDef)
+    private static void copyOtherAnimalValues(string originalDef)
     {
         var list = new List<FloatMenuOption>();
 
@@ -971,7 +955,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         Find.WindowStack.Add(new FloatMenu(list));
     }
 
-    private void DrawTabsList(Rect rect)
+    private static void DrawTabsList(Rect rect)
     {
         var scrollContainer = rect.ContractedBy(10);
         scrollContainer.width = leftSideWidth;
@@ -988,33 +972,33 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         var allBiomes = Main.AllBiomes;
         var listAddition = 50;
         var height = allBiomes.Count;
-        if (instance.Settings.ReverseSettingsMode)
+        if (Instance.Settings.ReverseSettingsMode)
         {
             height = Main.AllAnimals.Count;
         }
 
         tabContentRect.height = (height * 27f) + listAddition;
         Widgets.BeginScrollView(tabFrameRect, ref tabsScrollPosition, tabContentRect);
-        listing_Standard.Begin(tabContentRect);
-        if (listing_Standard.ListItemSelectable("CWAS.settings".Translate(), Color.yellow, SelectedDef == "Settings"))
+        listingStandard.Begin(tabContentRect);
+        if (listingStandard.ListItemSelectable("CWAS.settings".Translate(), Color.yellow, SelectedDef == "Settings"))
         {
             SelectedDef = SelectedDef == "Settings" ? null : "Settings";
         }
 
-        listing_Standard.ListItemSelectable(null, Color.yellow);
-        if (instance.Settings.ReverseSettingsMode)
+        listingStandard.ListItemSelectable(null, Color.yellow);
+        if (Instance.Settings.ReverseSettingsMode)
         {
             foreach (var animalDef in Main.AllAnimals)
             {
-                var toolTip = string.Empty;
-                if (instance.Settings.CustomSpawnRates?.Any(
-                        pair => pair.Value.dictionary.ContainsKey(animalDef.defName)) == true)
+                var toolTip = $"{animalDef.defName} ({animalDef.modContentPack?.Name})\n{animalDef.race.description}";
+                if (Instance.Settings.CustomSpawnRates?.Any(pair =>
+                        pair.Value.dictionary.ContainsKey(animalDef.defName)) == true)
                 {
                     GUI.color = Color.green;
                     toolTip = "CWAS.customexists".Translate();
                 }
 
-                if (listing_Standard.ListItemSelectable(animalDef.label.CapitalizeFirst(), Color.yellow,
+                if (listingStandard.ListItemSelectable(animalDef.label.CapitalizeFirst(), Color.yellow,
                         SelectedDef == animalDef.defName, false, toolTip))
                 {
                     SelectedDef = SelectedDef == animalDef.defName ? null : animalDef.defName;
@@ -1023,22 +1007,22 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                 GUI.color = Color.white;
             }
 
-            listing_Standard.End();
+            listingStandard.End();
             Widgets.EndScrollView();
             return;
         }
 
         foreach (var biomeDef in allBiomes)
         {
-            var toolTip = string.Empty;
-            if (instance.Settings.CustomSpawnRates.ContainsKey(biomeDef.defName) ||
-                instance.Settings.CustomDensities.ContainsKey(biomeDef.defName))
+            var toolTip = $"{biomeDef.defName} ({biomeDef.modContentPack?.Name})\n{biomeDef.description}";
+            if (Instance.Settings.CustomSpawnRates.ContainsKey(biomeDef.defName) ||
+                Instance.Settings.CustomDensities.ContainsKey(biomeDef.defName))
             {
                 GUI.color = Color.green;
-                toolTip = "CWAS.customexists".Translate();
+                toolTip += "\n" + "CWAS.customexists".Translate();
             }
 
-            if (listing_Standard.ListItemSelectable(biomeDef.label.CapitalizeFirst(), Color.yellow,
+            if (listingStandard.ListItemSelectable(biomeDef.label.CapitalizeFirst(), Color.yellow,
                     SelectedDef == biomeDef.defName, false, toolTip))
             {
                 SelectedDef = SelectedDef == biomeDef.defName ? null : biomeDef.defName;
@@ -1047,7 +1031,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
             GUI.color = Color.white;
         }
 
-        listing_Standard.End();
+        listingStandard.End();
         Widgets.EndScrollView();
     }
 }

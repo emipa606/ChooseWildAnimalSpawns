@@ -10,10 +10,9 @@ namespace ChooseWildAnimalSpawns;
 [StaticConstructorOnStartup]
 public static class Main
 {
-    public static readonly Dictionary<string, List<BiomeAnimalRecord>> VanillaSpawnRates =
-        new Dictionary<string, List<BiomeAnimalRecord>>();
+    public static readonly Dictionary<string, List<BiomeAnimalRecord>> VanillaSpawnRates = new();
 
-    public static readonly Dictionary<string, float> VanillaDensities = new Dictionary<string, float>();
+    public static readonly Dictionary<string, float> VanillaDensities = new();
 
     private static List<PawnKindDef> allAnimals;
     private static List<BiomeDef> allBiomes;
@@ -31,15 +30,14 @@ public static class Main
         {
             if (allAnimals == null || allAnimals.Count == 0)
             {
-                allAnimals = (from animal in DefDatabase<PawnKindDef>.AllDefsListForReading
-                    where animal.RaceProps?.Animal == true
-                    orderby animal.label
-                    select animal).ToList();
+                allAnimals = DefDatabase<PawnKindDef>.AllDefsListForReading
+                    .Where(animal => animal.RaceProps?.Animal == true)
+                    .OrderBy(animal => animal.label)
+                    .ToList();
             }
 
             return allAnimals;
         }
-        set => allAnimals = value;
     }
 
     public static List<BiomeDef> AllBiomes
@@ -55,7 +53,6 @@ public static class Main
 
             return allBiomes;
         }
-        set => allBiomes = value;
     }
 
     private static void clearPawnKindDefs()
@@ -73,13 +70,14 @@ public static class Main
 
     public static void ApplyBiomeSettings()
     {
-        var costumSpawnRates = ChooseWildAnimalSpawns_Mod.instance.Settings.CustomSpawnRates;
-        var customDensities = ChooseWildAnimalSpawns_Mod.instance.Settings.CustomDensities;
-        foreach (var biome in AllBiomes)
+        var customSpawnRates = ChooseWildAnimalSpawnsMod.Instance.Settings.CustomSpawnRates;
+        var customDensities = ChooseWildAnimalSpawnsMod.Instance.Settings.CustomDensities;
+        var biomes = AllBiomes;
+        foreach (var biome in biomes)
         {
             var biomeAnimalList = new List<BiomeAnimalRecord>();
             var customBiomeDefs = new Dictionary<string, float>();
-            if (costumSpawnRates.TryGetValue(biome.defName, out var rate))
+            if (customSpawnRates.TryGetValue(biome.defName, out var rate))
             {
                 customBiomeDefs = rate.dictionary;
             }
@@ -94,7 +92,8 @@ public static class Main
                 vanillaBiomeDefs = spawnRate;
             }
 
-            foreach (var pawnKindDef in AllAnimals)
+            var animals = AllAnimals;
+            foreach (var pawnKindDef in animals)
             {
                 if (customBiomeDefs.TryGetValue(pawnKindDef.defName, out var def))
                 {
@@ -150,25 +149,6 @@ public static class Main
         }
     }
 
-    public static void ResetToVanillaRates()
-    {
-        foreach (var biome in AllBiomes)
-        {
-            biome.animalDensity = VanillaDensities[biome.defName];
-            if (!biome.AllWildAnimals.Any() && !VanillaSpawnRates.ContainsKey(biome.defName))
-            {
-                continue;
-            }
-
-            Traverse.Create(biome).Field("wildAnimals").SetValue(
-                !VanillaSpawnRates.TryGetValue(biome.defName, out var rate)
-                    ? []
-                    : rate);
-
-            Traverse.Create(biome).Field("cachedAnimalCommonalities").SetValue(null);
-        }
-    }
-
     public static void LogMessage(string message, bool forced = false, bool warning = false)
     {
         if (warning)
@@ -177,7 +157,7 @@ public static class Main
             return;
         }
 
-        if (!forced && !ChooseWildAnimalSpawns_Mod.instance.Settings.VerboseLogging)
+        if (!forced && !ChooseWildAnimalSpawnsMod.Instance.Settings.VerboseLogging)
         {
             return;
         }
