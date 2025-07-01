@@ -2,9 +2,14 @@
   "Continued": false,
   "CanAdd": "0",
   "CanRemove": "0",
-  "PreviewVersion": "1.5",
-  "LastXmlCleaning": "2025-06-08T23:31:16.2649879+02:00",
+  "PreviewVersion": "1.6",
+  "LastXmlCleaning": "2025-07-01T19:10:12.8557134+02:00",
   "SocialImageSet": true,
   "FundingSet": true,
-  "SearchTags": " biomes"
+  "SearchTags": " biomes",
+  "Patches": false,
+  "Defs": false,
+  "Assemblies": true,
+  "LinesOfCode": 54104.0,
+  "LinesOfXML": 0
 }

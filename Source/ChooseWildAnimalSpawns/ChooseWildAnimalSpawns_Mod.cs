@@ -662,12 +662,12 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                         var biomeTitle = biomeDef.label.CapitalizeFirst();
                         if (biomeTitle.Length > 30)
                         {
-                            biomeTitle = $"{biomeTitle.Substring(0, 27)}...";
+                            biomeTitle = $"{biomeTitle[..27]}...";
                         }
 
                         if (modInfo is { Length: > 30 })
                         {
-                            modInfo = $"{modInfo.Substring(0, 27)}...";
+                            modInfo = $"{modInfo[..27]}...";
                         }
 
                         if (Instance.Settings.CustomSpawnRates != null && Instance.Settings
@@ -814,12 +814,12 @@ public class ChooseWildAnimalSpawns_Mod : Mod
                     var animalTitle = animal.label.CapitalizeFirst();
                     if (animalTitle.Length > 30)
                     {
-                        animalTitle = $"{animalTitle.Substring(0, 27)}...";
+                        animalTitle = $"{animalTitle[..27]}...";
                     }
 
                     if (modInfo is { Length: > 30 })
                     {
-                        modInfo = $"{modInfo.Substring(0, 27)}...";
+                        modInfo = $"{modInfo[..27]}...";
                     }
 
                     if (Instance.Settings.CustomSpawnRates != null &&
@@ -970,7 +970,7 @@ public class ChooseWildAnimalSpawns_Mod : Mod
         tabContentRect.y = 0;
         tabContentRect.width -= 20;
         var allBiomes = Main.AllBiomes;
-        var listAddition = 50;
+        const int listAddition = 50;
         var height = allBiomes.Count;
         if (Instance.Settings.ReverseSettingsMode)
         {
