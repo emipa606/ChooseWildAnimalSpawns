@@ -3,6 +3,8 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 
+namespace ChooseWildAnimalSpawns;
+
 [StaticConstructorOnStartup]
 public static class ListingExtension
 {

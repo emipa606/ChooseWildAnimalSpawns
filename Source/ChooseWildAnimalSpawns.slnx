@@ -3,4 +3,13 @@
     <BuildType Name="Release" />
   </Configurations>
   <Project Path="ChooseWildAnimalSpawns/ChooseWildAnimalSpawns.csproj" />
+  <Folder Name="/.github/">
+    <File Path="../.github/copilot-instructions.md" />
+  </Folder>
+  <Folder Name="/XML/About/">
+    <File Path="../About/about.xml" />
+  </Folder>
+  <Folder Name="/XML/Languages/English/Keyed/">
+    <File Path="../Languages/English/Keyed/Mod_Settings.xml" />
+  </Folder>
 </Solution>

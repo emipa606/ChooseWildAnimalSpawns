@@ -14,9 +14,6 @@ public static class Main
 
     public static readonly Dictionary<string, float> VanillaDensities = new();
 
-    private static List<PawnKindDef> allAnimals;
-    private static List<BiomeDef> allBiomes;
-
     static Main()
     {
         saveVanillaValues();
@@ -28,15 +25,15 @@ public static class Main
     {
         get
         {
-            if (allAnimals == null || allAnimals.Count == 0)
+            if (field == null || field.Count == 0)
             {
-                allAnimals = DefDatabase<PawnKindDef>.AllDefsListForReading
+                field = DefDatabase<PawnKindDef>.AllDefsListForReading
                     .Where(animal => animal.RaceProps?.Animal == true)
                     .OrderBy(animal => animal.label)
                     .ToList();
             }
 
-            return allAnimals;
+            return field;
         }
     }
 
@@ -44,14 +41,14 @@ public static class Main
     {
         get
         {
-            if (allBiomes == null || allBiomes.Count == 0)
+            if (field == null || field.Count == 0)
             {
-                allBiomes = (from biome in DefDatabase<BiomeDef>.AllDefsListForReading
+                field = (from biome in DefDatabase<BiomeDef>.AllDefsListForReading
                     orderby biome.label
                     select biome).ToList();
             }
 
-            return allBiomes;
+            return field;
         }
     }
 
@@ -133,7 +130,7 @@ public static class Main
             var cachedCommonailtiesTraverse = Traverse.Create(biome).Field("cachedAnimalCommonalities");
             if (cachedCommonailtiesTraverse.GetValue() == null)
             {
-                _ = biome.CommonalityOfAnimal(AllAnimals.First());
+                _ = biome.CommonalityOfAnimal(AllAnimals[0]);
             }
 
             var cachedAnimalCommonalities = (Dictionary<PawnKindDef, float>)cachedCommonailtiesTraverse.GetValue();

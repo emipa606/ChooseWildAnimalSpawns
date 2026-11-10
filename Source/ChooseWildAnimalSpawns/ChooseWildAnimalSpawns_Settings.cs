@@ -7,17 +7,17 @@ namespace ChooseWildAnimalSpawns;
 public class ChooseWildAnimalSpawns_Settings : ModSettings
 {
     public Dictionary<string, float> CustomDensities = new();
-    private List<string> customDensitiesKeys;
-    private List<float> customDensitiesValues;
 
     public Dictionary<string, SaveableDictionary> CustomSpawnRates = new();
+    public bool ReverseSettingsMode;
+
+    public bool VerboseLogging;
+    private List<string> customDensitiesKeys;
+    private List<float> customDensitiesValues;
 
     private List<string> customSpawnRatesKeys;
 
     private List<SaveableDictionary> customSpawnRatesValues;
-    public bool ReverseSettingsMode;
-
-    public bool VerboseLogging;
 
     public override void ExposeData()
     {
